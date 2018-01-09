@@ -1,0 +1,24 @@
+INSTALL
+
+1. android
+mkdir bld-android-armv7 && cd bld-android-armv7
+cmake -DCMAKE_TOOLCHAIN_FILE=../crystax.toolchain.cmake \
+-DANDROID_NDK=~/android/crystax-ndk \
+-DANDROID_ABI="armeabi-v7a with NEON" \
+-DANDROID_TOOLCHAIN_VERSION=5 -DCMAKE_BUILD_TYPE=Release ..
+
+make -j8
+
+there will be 2 files: libz.a and libz.so
+
+2. iOS
+mkdir bld-ios && cd bld-ios
+cmake -GXcode -DIOS=1 -DCMAKE_OSX_ARCHITECTURES="x86_64 i386 armv7 arm64" ..
+# build a static library
+xcodebuild -target zlibstatic -configuration Release \
+-arch arm64 -arch armv7 -arch armv7s only_active_arch=no \
+defines_module=yes -sdk "iphoneos"
+# build a dynamic library
+xcodebuild -target zlib -configuration Release \
+-arch arm64 -arch armv7 -arch armv7s only_active_arch=no \
+defines_module=yes -sdk "iphoneos"
